@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "eshop_7a0af839"
+        },
+        {
+            "type": "java",
+            "name": "Run Main.java",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "eshop",
+            "cwd": "${workspaceFolder}/src"
+        }
+    ]
+}
