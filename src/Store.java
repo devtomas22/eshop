@@ -48,7 +48,7 @@ public class Store {
         createProduct("TravelMate Carry-On Suitcase", 129.00, "Lightweight, durablesuitcase with 360-degree spinner wheels.", 30);
     }
     private void simulateShopper() {
-        this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow");
+        this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow", 5);
 
     }
     public static void displayShoppingMenu() {
@@ -73,6 +73,10 @@ public class Store {
                     for (Product p : products.values()) {
                         System.out.println(p.toString());
                     }
+                }
+                case 3 -> {
+                    System.out.println("Cart contents: ");
+                    activeShoppingCart.showCart();
                 }
                 case 0 -> {
                     quitMainLoop = true;

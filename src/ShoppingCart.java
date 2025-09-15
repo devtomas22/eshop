@@ -14,9 +14,26 @@ public class ShoppingCart {
         }
         return count;
     }
+
     int addToCart(String productName) {
         return addToCart(productName, 1);
     }
 
-    // TODO: Remove from cart
+    void showCart() {
+        products.forEach((productName, count) -> {
+            System.out.printf("Product: %s x %d%n", productName, count);
+        } );
+    }
+
+    void removeFromCart(String productName, int count) {
+        if(products.containsKey(productName)) {
+            if(products.get(productName) <= count){
+                products.remove(productName);
+            }
+            else {
+                products.compute(productName, (k, countInCart) -> countInCart - count);
+            }
+        }
+    }
+       // TODO: Remove from cart
 }
