@@ -1,14 +1,12 @@
-public final class Payment {
-    static Payment singleObject;
-
-    public static Payment getInstance(){
-        if(singleObject == null){
-            singleObject = new Payment();
-        }
-        return singleObject;
+public class Payment {
+    enum PaymentMethod {
+        Cash,
+        CreditCard,
     }
-
-    private Payment(){
-
+    PaymentMethod paymentMethod;
+    double amountInEUR;
+    Payment(PaymentMethod paymentMethod, double amountInEUR) {
+        this.paymentMethod = paymentMethod;
+        this.amountInEUR = amountInEUR;
     }
 }
