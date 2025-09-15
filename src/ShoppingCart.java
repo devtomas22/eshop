@@ -19,19 +19,20 @@ public class ShoppingCart {
     }
 
     void showCart() {
-        products.forEach((productName, count) -> {
-            System.out.printf("Product: %s x %d%n", productName, count);
-        } );
+        products.forEach((productName, count)
+                -> System.out.printf("Product: %s x %d%n", productName, count));
     }
 
     // TODO: Remove from cart
     void removeFromCart(String productName, int count) {
         if(products.containsKey(productName)) {
-            if(products.get(productName) <= count){
+            int countInCart = products.get(productName);
+
+            if(countInCart <= count){
                 products.remove(productName);
             }
             else {
-                products.compute(productName, (k, countInCart) -> countInCart - count);
+                products.put(productName, countInCart - count);
             }
         }
     }
