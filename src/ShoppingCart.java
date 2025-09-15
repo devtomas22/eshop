@@ -1,10 +1,9 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ShoppingCart {
-    // ArrayList<Product> products = new ArrayList<Product>();
     Map<String, Integer> products = new HashMap<>();
+
     int addToCart(String productName, int count) {
         if (!products.containsKey(productName)) {
             products.put(productName, count);
@@ -25,6 +24,7 @@ public class ShoppingCart {
         } );
     }
 
+    // TODO: Remove from cart
     void removeFromCart(String productName, int count) {
         if(products.containsKey(productName)) {
             if(products.get(productName) <= count){
@@ -35,5 +35,4 @@ public class ShoppingCart {
             }
         }
     }
-       // TODO: Remove from cart
 }
