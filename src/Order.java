@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class Order {
     }
 
     public Map<String, Integer> getOrderedProducts() {
-        return new HashMap<String, Integer>(orderedProducts);
+        return Collections.unmodifiableMap(this.orderedProducts);
     }
 
     public Shipping getShipping() {

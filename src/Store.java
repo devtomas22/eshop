@@ -57,13 +57,6 @@ public class Store {
         // convertShoppingCartToOrder();
         runMenu();
     }
-    /*
-    public static void displayShoppingMenu() {
-        System.out.println("1. List products");
-        System.out.println("2. Add to cart");
-        System.out.println("3. Show cart");
-    }
-    */
 
     public String GetChoice(Scanner scanner, List<String> list) {
         HashMap<Integer, String> choices = new  HashMap<>();
