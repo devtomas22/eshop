@@ -174,42 +174,17 @@ public class Store {
     }
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
-        boolean quitMainLoop = false;
-        while (!quitMainLoop) {
-            List<String> choices = new ArrayList<>(Arrays.asList(
-                    "List products",
-                    "Add product",
-                    "Show cart",
-                    "Checkout cart",
-                    "Stop shopping",
-                    "Manage customers"
-            ));
-            switch(GetChoice(scanner, choices)) {
-                case "List products" -> printProductList();
-                case "Add product" -> {}
-                case "Show cart" -> printCart();
-                case "Checkout cart" -> checkoutCart(scanner);
-                case "Manage customers" -> {
-                    boolean returnToMain = false;
-                    while (!returnToMain) {
-                        switch(GetChoice(scanner, new ArrayList<>(Arrays.asList(
-                                "Add customer",
-                                "List customers",
-                                "Remove customer",
-                                "Return to main menu"
-                        )))) {
-                            case "Add customer" -> readInputAndAddCustomer(scanner);
-                            case "List customers" -> printCustomers();
-                            case "Remove customer" -> {
-                            }
-                            case "Return to main menu" -> returnToMain = true;
-                        }
-                    }
-
-                }
-                case "Stop shopping" -> quitMainLoop = true;
-            }
-        }
+        Map<String, Runnable> menu = new LinkedHashMap<>();
+        menu.put("List products", () -> printProductList());
+        menu.put("Show cart", () -> printCart());
+        menu.put("Checkout cart", () -> checkoutCart(scanner));
+        menu.put("Manage customers", () -> {
+            Map<String, Runnable> submenu = new LinkedHashMap<>();
+            submenu.put("Add customer", () -> readInputAndAddCustomer(scanner));
+            submenu.put("List customers", () -> printCustomers());
+            MenuRunner.runMenu(scanner, submenu);
+        });
+        MenuRunner.runMenuUntilQuit(scanner, menu);
         scanner.close();
     }
 
