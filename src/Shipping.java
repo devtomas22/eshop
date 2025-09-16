@@ -1,16 +1,33 @@
 
 public class Shipping {
-    enum DeliveryOptions {
+    public enum DeliveryOptions {
         HomeDelivery,
         StandardDelivery,
     }
-    enum TrackingState {
+    public enum TrackingState {
         Shipped,
         ReceivedToStore,
         Lost,
         PickedUp,
     }
-    DeliveryOptions deliveryOptions = DeliveryOptions.HomeDelivery;
-    TrackingState trackingState = TrackingState.Shipped;
 
+    private final DeliveryOptions deliveryOptions;
+    private TrackingState trackingState;
+
+    public Shipping(DeliveryOptions deliveryOptions, TrackingState trackingState) {
+        this.deliveryOptions = deliveryOptions;
+        this.trackingState = trackingState;
+    }
+
+    public DeliveryOptions getDeliveryOptions() {
+        return deliveryOptions;
+    }
+
+    public TrackingState getTrackingState() {
+        return trackingState;
+    }
+
+    public void setTrackingState(TrackingState trackingState) {
+        this.trackingState = trackingState;
+    }
 }

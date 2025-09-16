@@ -2,9 +2,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ShoppingCart {
-    Map<String, Integer> products = new HashMap<>();
+    private Map<String, Integer> products = new HashMap<>();
 
-    int addToCart(String productName, int count) {
+    public int addToCart(String productName, int count) {
         if (!products.containsKey(productName)) {
             products.put(productName, count);
         }
@@ -14,17 +14,17 @@ public class ShoppingCart {
         return count;
     }
 
-    int addToCart(String productName) {
+    public int addToCart(String productName) {
         return addToCart(productName, 1);
     }
 
-    void showCart() {
+    public void showCart() {
         products.forEach((productName, count)
                 -> System.out.printf("Product: %s x %d%n", productName, count));
     }
 
     // TODO: Remove from cart
-    void removeFromCart(String productName, int count) {
+    public void removeFromCart(String productName, int count) {
         if(products.containsKey(productName)) {
             int countInCart = products.get(productName);
 
@@ -35,5 +35,9 @@ public class ShoppingCart {
                 products.put(productName, countInCart - count);
             }
         }
+    }
+
+    public Map<String, Integer> getProducts() {
+        return new HashMap<String,Integer>(products);
     }
 }
