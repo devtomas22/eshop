@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 public class Store {
@@ -17,7 +14,17 @@ public class Store {
         }
         return singleObject;
     }
-    // CRUD
+
+    void convertShoppingCartToOrder() {
+        Shipping shipping = new Shipping(Shipping.DeliveryOptions.HomeDelivery);
+        Payment payment = new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost());
+        Customer customer = new Customer("Sven", "Karlsson", "Näktergalsvägen", "12345", "sven@oracle.se");
+        Order order = new Order(customer, shipping, payment, activeShoppingCart.getProducts());
+
+        this.activeShoppingCart = new ShoppingCart();
+        this.activeOrders.add(order);
+    }
+
     Product createProduct(String productName, double price, String productDescription, int numberOfItemsInStock) {
         if (this.products.containsKey(productName)) {
             return this.products.get(productName);
@@ -28,10 +35,8 @@ public class Store {
             return p;
         }
     }
-    Product getProductWithName() {
-        // if product with name exist, return the product
-        // otherwise the product
-        return null;
+    Product getProductWithName(String productName) {
+        return this.products.get(productName);
     }
 
     private Store(){
@@ -49,41 +54,67 @@ public class Store {
     }
     private void simulateShopper() {
         this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow", 5);
-
+        // convertShoppingCartToOrder();
+        runMenu();
     }
+    /*
     public static void displayShoppingMenu() {
         System.out.println("1. List products");
         System.out.println("2. Add to cart");
         System.out.println("3. Show cart");
     }
+    */
 
-    public void startShopping (){
-        initializeProducts();
-        simulateShopper();
+    public String GetChoice(Scanner scanner, List<String> list) {
+        HashMap<Integer, String> choices = new  HashMap<>();
+        for (int i= 0; i < list.size(); i++) {
+            System.out.printf("%d: %s %n", i, list.get(i));
+            choices.put(i, list.get(i));
+        }
+        System.out.println("Enter your choices");
+        int index = scanner.nextInt();
+        return choices.get(index);
+    }
+
+    public void runMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean quitMainLoop = false;
         while (!quitMainLoop) {
-            displayShoppingMenu();
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Rensa newline
-
-            switch (choice) {
-                case 1 -> {
+            List<String> choices = new ArrayList<>();
+            choices.add ("List products");
+            choices.add ("Add product");
+            choices.add ("Show cart");
+            choices.add ("Go to checkout");
+            choices.add ("Stop shopping");
+            switch(GetChoice(scanner, choices)) {
+                case "List products" -> {
                     System.out.println("Products:");
                     for (Product p : products.values()) {
                         System.out.println(p.toString());
                     }
                 }
-                case 3 -> {
+                case "Add product" -> {
+
+                }
+                case "Show cart" -> {
                     System.out.println("Cart contents: ");
                     activeShoppingCart.showCart();
                 }
-                case 0 -> {
+                case "Go to checkout" -> {
+
+                }
+                case "Stop shopping" -> {
                     quitMainLoop = true;
                 }
             }
         }
         scanner.close();
+    }
+
+    public void startShopping (){
+        initializeProducts();
+        simulateShopper();
+
     }
 
 }

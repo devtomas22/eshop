@@ -1,23 +1,26 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
-    private ArrayList<String> orderedProducts = new ArrayList<String>();
+    private Map<String, Integer> orderedProducts = new HashMap<>();
     private Shipping shipping = null;
     private Customer customer;
     private Payment payment;
 
-    int orderID;
+    private int orderID;
     public static int NextOrderID = 0;
 
-    public Order(Customer customer, Shipping shipping, Payment payment) {
+    public Order(Customer customer, Shipping shipping, Payment payment, Map <String, Integer> orderedProducts) {
         this.orderID = NextOrderID++;
         this.customer = customer;
         this.shipping = shipping;
         this.payment = payment;
+        this.orderedProducts = orderedProducts;
     }
 
-    public ArrayList<String> getOrderedProducts() {
-        return new ArrayList<>(orderedProducts);
+    public Map<String, Integer> getOrderedProducts() {
+        return new HashMap<String, Integer>(orderedProducts);
     }
 
     public Shipping getShipping() {

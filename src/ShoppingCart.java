@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShoppingCart {
@@ -12,6 +14,24 @@ public class ShoppingCart {
             products.put(productName, products.get(productName) + count);
         }
         return count;
+    }
+
+    public double getTotalCost() {
+        double sum = 0;
+        for (String key : products.keySet()) {
+            sum += costForProduct(key);
+        }
+        return sum;
+    }
+
+    private double costForProduct(String productName) {
+        Product product = Store.getInstance().getProductWithName(productName);
+        double totalCost = 0;
+        if (products.containsKey(productName)) {
+            int count = products.get(productName);
+            totalCost += product.getPrice() * count;
+        }
+        return totalCost;
     }
 
     public int addToCart(String productName) {

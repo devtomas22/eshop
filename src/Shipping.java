@@ -5,6 +5,7 @@ public class Shipping {
         StandardDelivery,
     }
     public enum TrackingState {
+        ToBeShipped,
         Shipped,
         ReceivedToStore,
         Lost,
@@ -17,6 +18,11 @@ public class Shipping {
     public Shipping(DeliveryOptions deliveryOptions, TrackingState trackingState) {
         this.deliveryOptions = deliveryOptions;
         this.trackingState = trackingState;
+    }
+
+    public Shipping(DeliveryOptions deliveryOptions) {
+        this.deliveryOptions = deliveryOptions;
+        this.trackingState = TrackingState.ToBeShipped;
     }
 
     public DeliveryOptions getDeliveryOptions() {
