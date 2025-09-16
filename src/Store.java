@@ -121,8 +121,39 @@ public class Store {
             this.readInputAndAddCustomer(scanner);
             customer = this.activeCustomer;
         }
-        Shipping shipping = new Shipping(Shipping.DeliveryOptions.HomeDelivery);
-        Payment payment = new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost());
+        Shipping shipping;
+        System.out.println("Choose a delivery method:");
+        for ( Shipping.DeliveryOptions deliveryOption : Shipping.DeliveryOptions.values()){
+            System.out.printf("%s%n", deliveryOption.name());
+        }
+        while (true){
+            String input = scanner.nextLine().trim().toLowerCase();
+            if (input.equals(Shipping.DeliveryOptions.HomeDelivery.name().toLowerCase())){
+                shipping = new Shipping(Shipping.DeliveryOptions.HomeDelivery);
+                break;
+            } else if (input.equals(Shipping.DeliveryOptions.StandardDelivery.name().toLowerCase())) {
+                shipping = new Shipping(Shipping.DeliveryOptions.StandardDelivery);
+                break;
+            }
+            System.out.println("Please enter a valid shipping method.");
+        }
+
+        Payment payment;
+        System.out.println("Choose a payment method:");
+        for ( Payment.PaymentMethod paymentMethod : Payment.PaymentMethod.values()){
+            System.out.printf("%s%n", paymentMethod.name());
+        }
+        while (true){
+            String input = scanner.nextLine().trim().toLowerCase();
+            if (input.equals(Payment.PaymentMethod.Cash.name().toLowerCase())){
+                payment = new Payment(Payment.PaymentMethod.Cash, activeShoppingCart.getTotalCost());
+                break;
+            } else if (input.equals(Payment.PaymentMethod.CreditCard.name().toLowerCase())) {
+                payment = new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost());
+                break;
+            }
+            System.out.println("Please enter a valid payment method.");
+        }
         Order order = new Order(customer, shipping, payment, activeShoppingCart.getProducts());
 
         this.activeShoppingCart = new ShoppingCart();
