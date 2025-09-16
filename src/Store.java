@@ -182,7 +182,7 @@ public class Store {
             Map<String, Runnable> submenu = new LinkedHashMap<>();
             submenu.put("Add customer", () -> readInputAndAddCustomer(scanner));
             submenu.put("List customers", () -> printCustomers());
-            MenuRunner.runMenu(scanner, submenu);
+            MenuRunner.runMenuUntilQuit(scanner, submenu);
         });
         MenuRunner.runMenuUntilQuit(scanner, menu);
         scanner.close();
