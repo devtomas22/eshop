@@ -7,13 +7,10 @@ public class Store {
     ArrayList<Order> activeOrders = new ArrayList<Order>();
     ArrayList<Order> finishedOrders =new ArrayList<Order>();
     Map<String, Product> products = new HashMap<>();
+    Map<Integer, Customer> customers = new HashMap<>();
+    Customer activeCustomer;
+
     // HashMap<Product, Integer> stock = new HashMap<Product, Integer>();
-    public static Store getInstance(){
-        if(singleObject == null){
-            singleObject = new Store();
-        }
-        return singleObject;
-    }
 
     void convertShoppingCartToOrder() {
         Shipping shipping = new Shipping(Shipping.DeliveryOptions.HomeDelivery);
@@ -39,6 +36,18 @@ public class Store {
         return this.products.get(productName);
     }
 
+    boolean registerCustomer(Customer customer) {
+        if (this.customers.containsKey(customer.getCustomerID())) {
+            activeCustomer = this.customers.get(customer.getCustomerID());
+            return false;
+        }
+        else {
+            this.customers.put(customer.getCustomerID(), customer);
+            activeCustomer = customer;
+            return true;
+        }
+    }
+
     private Store(){
 
     }
@@ -53,22 +62,85 @@ public class Store {
         createProduct("TravelMate Carry-On Suitcase", 129.00, "Lightweight, durablesuitcase with 360-degree spinner wheels.", 30);
     }
     private void simulateShopper() {
+        Customer customer = new Customer("Sven", "Karlsson", "Näktergalsvägen", "12345", "sven@oracle.se");
+        this.registerCustomer(customer);
         this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow", 5);
-        // convertShoppingCartToOrder();
-        runMenu();
     }
 
     public String GetChoice(Scanner scanner, List<String> list) {
         HashMap<Integer, String> choices = new  HashMap<>();
         for (int i= 0; i < list.size(); i++) {
-            System.out.printf("%d: %s %n", i, list.get(i));
-            choices.put(i, list.get(i));
+            System.out.printf("%d: %s %n", i + 1, list.get(i));
+            choices.put(i + 1, list.get(i));
         }
-        System.out.println("Enter your choices");
-        int index = scanner.nextInt();
-        return choices.get(index);
+        System.out.println("Enter your choice: ");
+        String selected = null;
+        while (true) {
+            try {
+                String line = scanner.nextLine();
+                int index = Integer.parseInt(line);
+                selected = choices.get(index);
+                break;
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Please enter a valid choice");
+            }
+
+        }
+        return selected;
     }
 
+    private void printProductList() {
+        System.out.println("Products:");
+        for (Product p : products.values()) {
+            System.out.println(p.toString());
+        }
+    }
+
+    private void printCustomers() {
+        for (Customer c : customers.values()) {
+            System.out.println(c.toString());
+        }
+    }
+
+    private void printCart() {
+        System.out.println("Cart contents: ");
+        activeShoppingCart.showCart();
+    }
+    private void checkoutCart(Scanner scanner) {
+        Customer customer = null;
+        if (this.activeCustomer != null) {
+            System.out.println("Please verify whether this customer is you: yes/no");
+            System.out.println(this.activeCustomer.toString());
+            String choice = scanner.nextLine().trim();
+            if (choice.equals("yes")) {
+                customer = this.activeCustomer;
+            }
+        }
+        if (customer == null) {
+            this.readInputAndAddCustomer(scanner);
+            customer = this.activeCustomer;
+        }
+        Shipping shipping = new Shipping(Shipping.DeliveryOptions.HomeDelivery);
+        Payment payment = new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost());
+        Order order = new Order(customer, shipping, payment, activeShoppingCart.getProducts());
+
+        this.activeShoppingCart = new ShoppingCart();
+        this.activeOrders.add(order);
+    }
+    private boolean readInputAndAddCustomer(Scanner scanner) {
+        System.out.println("Enter First Name:");
+        String firstName = scanner.nextLine();
+        System.out.println("Enter Last Name:");
+        String lastName = scanner.nextLine();
+        System.out.println("Enter Address:");
+        String address = scanner.nextLine();
+        System.out.println("Enter Phone Number:");
+        String phoneNumber = scanner.nextLine();
+        System.out.println("Enter Email:");
+        String email = scanner.nextLine();
+        return this.registerCustomer(new Customer(firstName, lastName, address, phoneNumber, email));
+    }
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean quitMainLoop = false;
@@ -77,29 +149,34 @@ public class Store {
                     "List products",
                     "Add product",
                     "Show cart",
-                    "Go to checkout",
-                    "Stop shopping"
+                    "Checkout cart",
+                    "Stop shopping",
+                    "Manage customers"
             ));
             switch(GetChoice(scanner, choices)) {
-                case "List products" -> {
-                    System.out.println("Products:");
-                    for (Product p : products.values()) {
-                        System.out.println(p.toString());
+                case "List products" -> printProductList();
+                case "Add product" -> {}
+                case "Show cart" -> printCart();
+                case "Checkout cart" -> checkoutCart(scanner);
+                case "Manage customers" -> {
+                    boolean returnToMain = false;
+                    while (!returnToMain) {
+                        switch(GetChoice(scanner, new ArrayList<>(Arrays.asList(
+                                "Add customer",
+                                "List customers",
+                                "Remove customer",
+                                "Return to main menu"
+                        )))) {
+                            case "Add customer" -> readInputAndAddCustomer(scanner);
+                            case "List customers" -> printCustomers();
+                            case "Remove customer" -> {
+                            }
+                            case "Return to main menu" -> returnToMain = true;
+                        }
                     }
-                }
-                case "Add product" -> {
 
                 }
-                case "Show cart" -> {
-                    System.out.println("Cart contents: ");
-                    activeShoppingCart.showCart();
-                }
-                case "Go to checkout" -> {
-
-                }
-                case "Stop shopping" -> {
-                    quitMainLoop = true;
-                }
+                case "Stop shopping" -> quitMainLoop = true;
             }
         }
         scanner.close();
@@ -108,7 +185,13 @@ public class Store {
     public void startShopping (){
         initializeProducts();
         simulateShopper();
-
+        runMenu();
     }
 
+    public static Store getInstance(){
+        if(singleObject == null){
+            singleObject = new Store();
+        }
+        return singleObject;
+    }
 }
