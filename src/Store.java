@@ -73,12 +73,13 @@ public class Store {
         Scanner scanner = new Scanner(System.in);
         boolean quitMainLoop = false;
         while (!quitMainLoop) {
-            List<String> choices = new ArrayList<>();
-            choices.add ("List products");
-            choices.add ("Add product");
-            choices.add ("Show cart");
-            choices.add ("Go to checkout");
-            choices.add ("Stop shopping");
+            List<String> choices = new ArrayList<>(Arrays.asList(
+                    "List products",
+                    "Add product",
+                    "Show cart",
+                    "Go to checkout",
+                    "Stop shopping"
+            ));
             switch(GetChoice(scanner, choices)) {
                 case "List products" -> {
                     System.out.println("Products:");
