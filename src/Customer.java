@@ -47,7 +47,7 @@ public class Customer {
         sb.append(String.format("First Name: %s%n", firstName));
         sb.append(String.format("Last Name: %s%n", lastName));
         sb.append(String.format("Address: %s%n", address));
-        sb.append(String.format("Phone number Name: %s%n", phoneNumber));
+        sb.append(String.format("Phone number: %s%n", phoneNumber));
         sb.append(String.format("Email: %s%n", email));
         return sb.toString();
     }
