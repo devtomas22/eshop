@@ -11,13 +11,6 @@ public class Inventory {
     public Map<String, Product> getProductsInInventory() {
         return Collections.unmodifiableMap(this.products);
     }
-
-    public static Inventory getInstance(){
-        if(singleObject == null){
-            singleObject = new Inventory();
-        }
-        return singleObject;
-    }
     
     private Product createProduct(String productName, double price, String productDescription, int numberOfItemsInStock) {
         if (this.products.containsKey(productName)) {
