@@ -5,9 +5,21 @@ import java.util.Map;
 public class Inventory {
 
     Map<String, Product> products = new HashMap<>();
+    static Inventory singleObject;
 
-    public Map<Product> getProductsInInventory() {
+    public Inventory(){
+        this.products = products;
+    }
+
+    public Map<String,Product> getProductsInInventory() {
         return Collections.unmodifiableMap(this.products);
+    }
+
+    public static Inventory getInstance(){
+        if(singleObject == null){
+            singleObject = new Inventory();
+        }
+        return singleObject;
     }
     
     private Product createProduct(String productName, double price, String productDescription, int numberOfItemsInStock) {
