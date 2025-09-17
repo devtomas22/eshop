@@ -1,0 +1,85 @@
+import java.util.*;
+import java.util.concurrent.Callable;
+
+public class Store {
+    static Store singleObject;
+    ShoppingCart activeShoppingCart = new ShoppingCart();
+    ArrayList<Order> activeOrders = new ArrayList<Order>();
+    ArrayList<Order> finishedOrders =new ArrayList<Order>();
+    // Map<String, Product> products = new HashMap<>();
+
+    private Store() {}
+    // HashMap<Product, Integer> stock = new HashMap<Product, Integer>();
+
+    private void simulateShopper() {
+        Customer customer = new Customer("Sven", "Karlsson", "Näktergalsvägen", "12345", "sven@oracle.se");
+        CustomerManager.getInstance().registerCustomer(customer);
+        this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow", 5);
+    }
+
+    private void printCart() {
+        System.out.println("Cart contents: ");
+        activeShoppingCart.showCart();
+    }
+    private void checkoutCart(Scanner scanner) {
+        Customer customer = null;
+        if (CustomerManager.getInstance().getActiveCustomer() != null) {
+            System.out.println("Please verify whether this customer is you: yes/no");
+            System.out.println(CustomerManager.getInstance().getActiveCustomer().toString());
+            String choice = scanner.nextLine().trim();
+            if (choice.equals("yes")) {
+                customer = CustomerManager.getInstance().getActiveCustomer();
+            }
+        }
+        if (customer == null) {
+            CustomerManager.getInstance().readInputAndAddCustomer(scanner);
+            customer = CustomerManager.getInstance().getActiveCustomer();
+        }
+
+        System.out.println("Choose a delivery method:");
+
+        Map<String, Callable<Shipping>> menu = new HashMap<>();
+        menu.put("Home Delivery", () -> { return new Shipping(Shipping.DeliveryOptions.HomeDelivery); });
+        menu.put("Standard Delivery", () -> { return new Shipping(Shipping.DeliveryOptions.StandardDelivery); });
+        Shipping shipping = MenuRunner.runMenuType(scanner, menu);
+
+        Map<String, Callable<Payment>> paymentMenu = new HashMap<>();
+        paymentMenu.put("Cash", () -> new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()));
+        paymentMenu.put("Credit Card", () -> { return new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()); });
+        Payment payment = MenuRunner.runMenuType(scanner, paymentMenu);
+
+        Order order = new Order(customer, shipping, payment, activeShoppingCart.getProducts());
+
+        this.activeShoppingCart = new ShoppingCart();
+        this.activeOrders.add(order);
+    }
+
+    public void runMenu() {
+        Scanner scanner = new Scanner(System.in);
+        Map<String, Runnable> menu = new HashMap<>();
+        menu.put("List products", () -> Inventory.getInstance().printProductList());
+        menu.put("Show cart", () -> printCart());
+        menu.put("Checkout cart", () -> checkoutCart(scanner));
+        menu.put("Manage customers", () -> {
+            Map<String, Runnable> submenu = new HashMap<>();
+            submenu.put("Add customer", () -> CustomerManager.getInstance().readInputAndAddCustomer(scanner));
+            submenu.put("List customers", () -> CustomerManager.getInstance().printCustomers());
+            MenuRunner.runMenuUntilQuit(scanner, submenu);
+        });
+        MenuRunner.runMenuUntilQuit(scanner, menu);
+        scanner.close();
+    }
+
+    public void startShopping (){
+        Inventory.getInstance().initializeProducts();
+        simulateShopper();
+        runMenu();
+    }
+
+    public static Store getInstance(){
+        if(singleObject == null){
+            singleObject = new Store();
+        }
+        return singleObject;
+    }
+}
