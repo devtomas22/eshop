@@ -39,9 +39,16 @@ public class CustomerManager {
         String address = scanner.nextLine();
         System.out.println("Enter Phone Number:");
         String phoneNumber = scanner.nextLine();
+        while (!StringHelpers.isPhoneNumber(phoneNumber)){
+            System.out.println("Invalid phone number format, try again.");
+            phoneNumber = scanner.nextLine();
+        }
         System.out.println("Enter Email:");
         String email = scanner.nextLine();
-
+        while (!StringHelpers.isEmail(email)){
+            System.out.println("Invalid email format, try again.");
+            email = scanner.nextLine();
+        }
         return this.registerCustomer(new Customer(firstName, lastName, address, phoneNumber, email));
     }
 
