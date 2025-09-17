@@ -1,17 +1,21 @@
 import java.util.*;
+import java.util.concurrent.Callable;
 
 public class MenuRunner {
-    public static void runMenuUntilQuit(Scanner scanner, Map<String, Runnable> optionMap) {
+
+    public static String runMenuUntilQuit(Scanner scanner, Map<String, Runnable> optionMap) {
         boolean[] flag = new boolean[] { true };
+        String chosen = null;
         Map<String, Runnable> optionMapCopy = new LinkedHashMap<>(optionMap);
         optionMapCopy.put("Quit", () -> flag[0] = false );
         while (flag[0]) {
-            runMenu(scanner, optionMapCopy);
+            chosen = runMenu(scanner, optionMapCopy);
         }
+        return chosen;
     }
-    public static void runMenu(Scanner scanner, Map<String, Runnable> optionMap) {
+    public static String runMenu(Scanner scanner, Map<String, Runnable> optionMap) {
         List<String> keys = new ArrayList<>(optionMap.keySet());
-
+        String chosenMenuItem = null;
         while (true) {
             // Print menu options with indexes
             for (int i = 0; i < keys.size(); i++) {
@@ -25,6 +29,7 @@ public class MenuRunner {
                 if (choice >= 0 && choice < keys.size()) {
                     // Execute corresponding function
                     optionMap.get(keys.get(choice)).run();
+                    chosenMenuItem = keys.get(choice);
                     break;
                 } else {
                     System.out.println("Invalid choice. Please try again.\n");
@@ -33,5 +38,34 @@ public class MenuRunner {
                 System.out.println("Please enter a valid integer.\n");
             }
         }
+        return chosenMenuItem;
+    }
+    public static <T> T runMenuType(Scanner scanner, Map<String, Callable<T>> optionMap) {
+        List<String> keys = new ArrayList<>(optionMap.keySet());
+        T chosenMenuItem = null;
+        while (true) {
+            // Print menu options with indexes
+            for (int i = 0; i < keys.size(); i++) {
+                System.out.println(i + ": " + keys.get(i));
+            }
+            System.out.print("Enter a number:  ");
+            String input = scanner.nextLine();
+            int choice;
+            try {
+                choice = Integer.parseInt(input);
+                if (choice >= 0 && choice < keys.size()) {
+                    // Execute corresponding function
+                    chosenMenuItem = optionMap.get(keys.get(choice)).call();
+                    break;
+                } else {
+                    System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer.");
+            } catch (Exception e) {
+                System.out.println("Unable to process the request.");
+            }
+        }
+        return chosenMenuItem;
     }
 }

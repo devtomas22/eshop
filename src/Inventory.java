@@ -1,3 +1,4 @@
+import java.lang.classfile.constantpool.InvokeDynamicEntry;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,4 +51,10 @@ public class Inventory {
         }
     }
 
+    public static Inventory getInstance() {
+        if (singleObject == null) {
+            singleObject = new Inventory();
+        }
+        return singleObject;
+    }
 }

@@ -25,7 +25,7 @@ public class ShoppingCart {
     }
 
     private double costForProduct(String productName) {
-        Product product = Store.getInstance().getProductWithName(productName);
+        Product product = Inventory.getInstance().getProductWithName(productName);
         double totalCost = 0;
         if (products.containsKey(productName)) {
             int count = products.get(productName);

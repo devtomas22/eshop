@@ -6,36 +6,12 @@ public class Store {
     ShoppingCart activeShoppingCart = new ShoppingCart();
     ArrayList<Order> activeOrders = new ArrayList<Order>();
     ArrayList<Order> finishedOrders =new ArrayList<Order>();
-    Map<String, Product> products = new HashMap<>();
+    // Map<String, Product> products = new HashMap<>();
     Map<Integer, Customer> customers = new HashMap<>();
     Customer activeCustomer;
 
+    private Store() {}
     // HashMap<Product, Integer> stock = new HashMap<Product, Integer>();
-
-    void convertShoppingCartToOrder() {
-        Shipping shipping = new Shipping(Shipping.DeliveryOptions.HomeDelivery);
-        Payment payment = new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost());
-        Customer customer = new Customer("Sven", "Karlsson", "Näktergalsvägen", "12345", "sven@oracle.se");
-        Order order = new Order(customer, shipping, payment, activeShoppingCart.getProducts());
-
-        this.activeShoppingCart = new ShoppingCart();
-        this.activeOrders.add(order);
-    }
-
-    Product createProduct(String productName, double price, String productDescription, int numberOfItemsInStock) {
-        if (this.products.containsKey(productName)) {
-            return this.products.get(productName);
-        }
-        else {
-            Product p = new Product(productName, price, productDescription, numberOfItemsInStock);
-            this.products.put(productName, p);
-            return p;
-        }
-    }
-    Product getProductWithName(String productName) {
-        return this.products.get(productName);
-    }
-
     boolean registerCustomer(Customer customer) {
         if (this.customers.containsKey(customer.getCustomerID())) {
             activeCustomer = this.customers.get(customer.getCustomerID());
@@ -48,53 +24,10 @@ public class Store {
         }
     }
 
-    private Store(){
-
-    }
-
-    private void initializeProducts() {
-        createProduct("GlowLite LED Desk Lamp", 39.50, "Adjustable brightness with touch control and USB charging.", 75);                                       createProduct("PureSip Water Bottle", 19.99, "BPA-free, insulated bottle keeps drinks cold for 24 hours.", 200);
-        createProduct("ComfyCloud Memory Foam Pillow", 45.00, "Ergonomic pillow designed for neck and spine support.", 60);
-        createProduct("TurboBlend Blender Pro", 149.99, "High-speed blender with multiple settings for smoothies and soups.", 40);
-        createProduct("AuraSound Wireless Headphones", 99.95, "Noise-canceling over-ear headphones with long battery life.", 85);
-        createProduct("FlexiCook Nonstick Pan", 29.99, "Durable nonstick coating, safe for all stovetops.", 150);
-        createProduct("ZenGarden Indoor Plant Kit", 24.50, "Complete kit with seeds,soil, and pots for easy gardening.", 100);
-        createProduct("TravelMate Carry-On Suitcase", 129.00, "Lightweight, durablesuitcase with 360-degree spinner wheels.", 30);
-    }
     private void simulateShopper() {
         Customer customer = new Customer("Sven", "Karlsson", "Näktergalsvägen", "12345", "sven@oracle.se");
         this.registerCustomer(customer);
         this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow", 5);
-    }
-
-    public String GetChoice(Scanner scanner, List<String> list) {
-        HashMap<Integer, String> choices = new  HashMap<>();
-        for (int i= 0; i < list.size(); i++) {
-            System.out.printf("%d: %s %n", i + 1, list.get(i));
-            choices.put(i + 1, list.get(i));
-        }
-        System.out.println("Enter your choice: ");
-        String selected = null;
-        while (true) {
-            try {
-                String line = scanner.nextLine();
-                int index = Integer.parseInt(line);
-                selected = choices.get(index);
-                break;
-            }
-            catch (NumberFormatException e) {
-                System.out.println("Please enter a valid choice");
-            }
-
-        }
-        return selected;
-    }
-
-    private void printProductList() {
-        System.out.println("Products:");
-        for (Product p : products.values()) {
-            System.out.println(p.toString());
-        }
     }
 
     private void printCustomers() {
@@ -155,7 +88,7 @@ public class Store {
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
         Map<String, Runnable> menu = new HashMap<>();
-        menu.put("List products", () -> printProductList());
+        menu.put("List products", () -> Inventory.getInstance().printProductList());
         menu.put("Show cart", () -> printCart());
         menu.put("Checkout cart", () -> checkoutCart(scanner));
         menu.put("Manage customers", () -> {
@@ -169,7 +102,7 @@ public class Store {
     }
 
     public void startShopping (){
-        initializeProducts();
+        Inventory.getInstance().initializeProducts();
         simulateShopper();
         runMenu();
     }
