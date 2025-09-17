@@ -10,10 +10,6 @@ public class Store {
     Map<Integer, Customer> customers = new HashMap<>();
     Customer activeCustomer;
 
-    StoreCheckout storeCheckout = new StoreCheckout(this);
-    StoreProductManagement productManagement = new StoreProductManagement(this);
-    StoreUserManagement userManagement = new StoreUserManagement(this);
-
     // HashMap<Product, Integer> stock = new HashMap<Product, Integer>();
 
     void convertShoppingCartToOrder() {
