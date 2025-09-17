@@ -8,11 +8,11 @@ public final class StringHelpers {
     public static boolean isEmail(String s){
         String[] components = s.split("@");
         if (components.length != 2) return false;
-        String[] headerComps = s.split("\\.");
+        String[] headerComps = components[0].split("\\.");
         for (String comp : headerComps){
             if(!ALPHANUMERIC_PATTERN.matcher(comp).matches()) return false;
         }
-        String[] domainComps = s.split("\\.");
+        String[] domainComps = components[1].split("\\.");
         if(domainComps.length < 2 || domainComps.length > 3) return false;
         for (String comp : domainComps){
             if(!ALPHANUMERIC_PATTERN.matcher(comp).matches()) return false;
