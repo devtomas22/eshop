@@ -6,7 +6,7 @@ public class Inventory {
 
     Map<String, Product> products = new HashMap<>();
 
-    public Map<Product> getProductsInInventory() {
+    public Map<String, Product> getProductsInInventory() {
         return Collections.unmodifiableMap(this.products);
     }
     
