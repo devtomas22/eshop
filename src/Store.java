@@ -121,39 +121,19 @@ public class Store {
             this.readInputAndAddCustomer(scanner);
             customer = this.activeCustomer;
         }
-        Shipping shipping;
-        System.out.println("Choose a delivery method:");
-        for ( Shipping.DeliveryOptions deliveryOption : Shipping.DeliveryOptions.values()){
-            System.out.printf("%s%n", deliveryOption.name());
-        }
-        while (true){
-            String input = scanner.nextLine().trim().toLowerCase();
-            if (input.equals(Shipping.DeliveryOptions.HomeDelivery.name().toLowerCase())){
-                shipping = new Shipping(Shipping.DeliveryOptions.HomeDelivery);
-                break;
-            } else if (input.equals(Shipping.DeliveryOptions.StandardDelivery.name().toLowerCase())) {
-                shipping = new Shipping(Shipping.DeliveryOptions.StandardDelivery);
-                break;
-            }
-            System.out.println("Please enter a valid shipping method.");
-        }
 
-        Payment payment;
-        System.out.println("Choose a payment method:");
-        for ( Payment.PaymentMethod paymentMethod : Payment.PaymentMethod.values()){
-            System.out.printf("%s%n", paymentMethod.name());
-        }
-        while (true){
-            String input = scanner.nextLine().trim().toLowerCase();
-            if (input.equals(Payment.PaymentMethod.Cash.name().toLowerCase())){
-                payment = new Payment(Payment.PaymentMethod.Cash, activeShoppingCart.getTotalCost());
-                break;
-            } else if (input.equals(Payment.PaymentMethod.CreditCard.name().toLowerCase())) {
-                payment = new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost());
-                break;
-            }
-            System.out.println("Please enter a valid payment method.");
-        }
+        System.out.println("Choose a delivery method:");
+
+        Map<String, Callable<Shipping>> menu = new HashMap<>();
+        menu.put("Home Delivery", () -> { return new Shipping(Shipping.DeliveryOptions.HomeDelivery); });
+        menu.put("Standard Delivery", () -> { return new Shipping(Shipping.DeliveryOptions.StandardDelivery); });
+        Shipping shipping = MenuRunner.runMenuType(scanner, menu);
+
+        Map<String, Callable<Payment>> paymentMenu = new HashMap<>();
+        paymentMenu.put("Cash", () -> new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()));
+        paymentMenu.put("Credit Card", () -> { return new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()); });
+        Payment payment = MenuRunner.runMenuType(scanner, paymentMenu);
+
         Order order = new Order(customer, shipping, payment, activeShoppingCart.getProducts());
 
         this.activeShoppingCart = new ShoppingCart();
