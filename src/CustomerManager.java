@@ -1,10 +1,12 @@
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class CustomerManager {
     static CustomerManager singleObject;
     private CustomerManager customerManager;
-
+    private Customer activeCustomer;
+    Map<Integer, Customer> customers = new HashMap<>();
     public static CustomerManager getInstance(){
         if(singleObject == null){
             singleObject = new CustomerManager();
@@ -12,19 +14,23 @@ public class CustomerManager {
         return singleObject;
     }
 
-    public boolean registerCustomer(Customer customer, Customer activeCustomer, Map<Integer, Customer> customers) {
+    public Customer getActiveCustomer() {
+        return activeCustomer;
+    }
+
+    public boolean registerCustomer(Customer customer) {
         if (customers.containsKey(customer.getCustomerID())) {
-            activeCustomer = customers.get(customer.getCustomerID());
+            this.activeCustomer = customers.get(customer.getCustomerID());
             return false;
         }
         else {
             customers.put(customer.getCustomerID(), customer);
-            activeCustomer = customer;
+            this.activeCustomer = customer;
             return true;
         }
     }
 
-    public boolean readInputAndAddCustomer(Scanner scanner, Customer activeCustomer, Map<Integer, Customer> customers) {
+    public boolean readInputAndAddCustomer(Scanner scanner) {
         System.out.println("Enter First Name:");
         String firstName = scanner.nextLine();
         System.out.println("Enter Last Name:");
@@ -36,10 +42,10 @@ public class CustomerManager {
         System.out.println("Enter Email:");
         String email = scanner.nextLine();
 
-        return this.registerCustomer(new Customer(firstName, lastName, address, phoneNumber, email), activeCustomer, customers);
+        return this.registerCustomer(new Customer(firstName, lastName, address, phoneNumber, email));
     }
 
-    public void printCustomers(Map<Integer, Customer> customers) {
+    public void printCustomers() {
         for (Customer c : customers.values()) {
             System.out.println(c.toString());
         }

@@ -7,33 +7,14 @@ public class Store {
     ArrayList<Order> activeOrders = new ArrayList<Order>();
     ArrayList<Order> finishedOrders =new ArrayList<Order>();
     // Map<String, Product> products = new HashMap<>();
-    Map<Integer, Customer> customers = new HashMap<>();
-    Customer activeCustomer;
 
     private Store() {}
     // HashMap<Product, Integer> stock = new HashMap<Product, Integer>();
-    boolean registerCustomer(Customer customer) {
-        if (this.customers.containsKey(customer.getCustomerID())) {
-            activeCustomer = this.customers.get(customer.getCustomerID());
-            return false;
-        }
-        else {
-            this.customers.put(customer.getCustomerID(), customer);
-            activeCustomer = customer;
-            return true;
-        }
-    }
 
     private void simulateShopper() {
         Customer customer = new Customer("Sven", "Karlsson", "Näktergalsvägen", "12345", "sven@oracle.se");
-        this.registerCustomer(customer);
+        CustomerManager.getInstance().registerCustomer(customer);
         this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow", 5);
-    }
-
-    private void printCustomers() {
-        for (Customer c : customers.values()) {
-            System.out.println(c.toString());
-        }
     }
 
     private void printCart() {
@@ -42,17 +23,17 @@ public class Store {
     }
     private void checkoutCart(Scanner scanner) {
         Customer customer = null;
-        if (this.activeCustomer != null) {
+        if (CustomerManager.getInstance().getActiveCustomer() != null) {
             System.out.println("Please verify whether this customer is you: yes/no");
-            System.out.println(this.activeCustomer.toString());
+            System.out.println(CustomerManager.getInstance().getActiveCustomer().toString());
             String choice = scanner.nextLine().trim();
             if (choice.equals("yes")) {
-                customer = this.activeCustomer;
+                customer = CustomerManager.getInstance().getActiveCustomer();
             }
         }
         if (customer == null) {
-            this.readInputAndAddCustomer(scanner);
-            customer = this.activeCustomer;
+            CustomerManager.getInstance().readInputAndAddCustomer(scanner);
+            customer = CustomerManager.getInstance().getActiveCustomer();
         }
 
         System.out.println("Choose a delivery method:");
@@ -72,19 +53,7 @@ public class Store {
         this.activeShoppingCart = new ShoppingCart();
         this.activeOrders.add(order);
     }
-    private boolean readInputAndAddCustomer(Scanner scanner) {
-        System.out.println("Enter First Name:");
-        String firstName = scanner.nextLine();
-        System.out.println("Enter Last Name:");
-        String lastName = scanner.nextLine();
-        System.out.println("Enter Address:");
-        String address = scanner.nextLine();
-        System.out.println("Enter Phone Number:");
-        String phoneNumber = scanner.nextLine();
-        System.out.println("Enter Email:");
-        String email = scanner.nextLine();
-        return this.registerCustomer(new Customer(firstName, lastName, address, phoneNumber, email));
-    }
+
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
         Map<String, Runnable> menu = new HashMap<>();
@@ -93,8 +62,8 @@ public class Store {
         menu.put("Checkout cart", () -> checkoutCart(scanner));
         menu.put("Manage customers", () -> {
             Map<String, Runnable> submenu = new HashMap<>();
-            submenu.put("Add customer", () -> readInputAndAddCustomer(scanner));
-            submenu.put("List customers", () -> printCustomers());
+            submenu.put("Add customer", () -> CustomerManager.getInstance().readInputAndAddCustomer(scanner));
+            submenu.put("List customers", () -> CustomerManager.getInstance().printCustomers());
             MenuRunner.runMenuUntilQuit(scanner, submenu);
         });
         MenuRunner.runMenuUntilQuit(scanner, menu);
