@@ -174,12 +174,12 @@ public class Store {
     }
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
-        Map<String, Runnable> menu = new LinkedHashMap<>();
+        Map<String, Runnable> menu = new HashMap<>();
         menu.put("List products", () -> printProductList());
         menu.put("Show cart", () -> printCart());
         menu.put("Checkout cart", () -> checkoutCart(scanner));
         menu.put("Manage customers", () -> {
-            Map<String, Runnable> submenu = new LinkedHashMap<>();
+            Map<String, Runnable> submenu = new HashMap<>();
             submenu.put("Add customer", () -> readInputAndAddCustomer(scanner));
             submenu.put("List customers", () -> printCustomers());
             MenuRunner.runMenuUntilQuit(scanner, submenu);
