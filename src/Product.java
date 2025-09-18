@@ -29,9 +29,12 @@ public class Product {
         sb.append("\n");
         sb.append("price = ");
         sb.append(this.price);
-        sb.append("\n");
+        sb.append("€\n");
         sb.append("productDescription = ");
         sb.append(this.productDescription);
+        sb.append("\n");
+        sb.append("number in stock = ");
+        sb.append(this.numberOfItemsInStock);
         sb.append("\n");
         return sb.toString();
     }
