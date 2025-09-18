@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ShoppingCart {
-    private Map<String, Integer> products = new HashMap<>();
+    private final Map<String, Integer> products = new HashMap<>();
 
     public int addToCart(String productName, int count) {
         if (!products.containsKey(productName)) {
@@ -39,8 +39,17 @@ public class ShoppingCart {
     }
 
     public void showCart() {
-        products.forEach((productName, count)
-                -> System.out.printf("Product: %s x %d%n", productName, count));
+        products.forEach((productName, count) -> {
+            double itemCost = Inventory.getInstance().getProductWithName(productName).getPrice();
+            System.out.printf("Product: %30s ", productName);
+            if (Inventory.getInstance().getProductWithName(productName).getNumberOfItemsInStock() <= 0){
+                System.out.printf("OUT OF STOCK%n");
+            } else {
+                System.out.printf("%6.2f€ x %2d = %6.2f€%n", itemCost, count, itemCost * count);
+            }
+        });
+
+        System.out.printf("Total: %.2f€%n", getTotalCost());
     }
 
     // TODO: Remove from cart
