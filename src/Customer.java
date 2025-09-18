@@ -59,4 +59,11 @@ public class Customer {
         sb.append(String.format("Email: %s%n", email));
         return sb.toString();
     }
+
+    public String censoredAccountDetails(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Email matching: %s%n", StringHelpers.censorEmail(email)));
+        sb.append(String.format("Phone number ending with %s", StringHelpers.endOfPhoneNumber(phoneNumber)));
+        return sb.toString();
+    }
 }

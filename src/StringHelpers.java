@@ -34,4 +34,39 @@ public final class StringHelpers {
         String substring = complete.substring(0, Math.min(part.length(), complete.length()));
         return (part.equalsIgnoreCase(substring));
     }
+
+    public static String censorEmail(String emailAddress){
+        StringBuilder sb = new StringBuilder();
+        String[] components = emailAddress.split("@");
+        sb.append(partiallyCensor(components[0], 2, 0));
+        sb.append('@');
+        String[] domainComponents = components[1].split("\\.");
+        sb.append(partiallyCensor(domainComponents[0], 1, 1));
+        sb.append('.');
+        for (int i = 1; i < domainComponents.length; i++){
+            sb.append(domainComponents[i]);
+            if (i != domainComponents.length - 1) sb.append('.');
+        }
+        return sb.toString();
+    }
+
+    private static String partiallyCensor(String s, int revealHead, int revealedTail){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++){
+            if (i < revealHead || i > s.length() - (revealedTail + 1)){
+                sb.append(s.charAt(i));
+            } else {
+                sb.append('*');
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String endOfPhoneNumber(String phoneNumber, int numDigits){
+        return phoneNumber.replaceAll("\\s+|-", "").substring(phoneNumber.length() - (numDigits + 1));
+    }
+
+    public static String endOfPhoneNumber(String phoneNumber){
+        return endOfPhoneNumber(phoneNumber, 2);
+    }
 }

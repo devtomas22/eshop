@@ -36,8 +36,8 @@ public class Store {
     private void checkoutCart(Scanner scanner) {
         Customer customer = null;
         if (CustomerManager.getInstance().getActiveCustomer() != null) {
-            System.out.println("Please verify whether this customer is you: yes/no");
-            System.out.println(CustomerManager.getInstance().getActiveCustomer().toString());
+            System.out.println("Please verify whether this information matches your account: yes/no");
+            System.out.println(CustomerManager.getInstance().getActiveCustomer().censoredAccountDetails());
             String choice = scanner.nextLine().trim();
             if (choice.equals("yes")) {
                 customer = CustomerManager.getInstance().getActiveCustomer();
