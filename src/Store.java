@@ -12,8 +12,9 @@ public class Store {
     // HashMap<Product, Integer> stock = new HashMap<Product, Integer>();
 
     private void simulateShopper() {
-        Customer customer = new Customer("Sven", "Karlsson", "Näktergalsvägen", "12345", "sven@oracle.se");
-        CustomerManager.getInstance().registerCustomer(customer);
+        CustomerManager.getInstance().registerCustomer(new Customer("Sven", "Karlsson", "Näktergalsvägen 40", "12345", "sven@oracle.se"));
+        CustomerManager.getInstance().registerCustomer(new Customer("Karl", "Gustavsson", "Main Street 0", "555-123", "karl@lexicon-it.se"));
+
         this.activeShoppingCart.addToCart("ComfyCloud Memory Foam Pillow", 5);
     }
 
@@ -21,6 +22,17 @@ public class Store {
         System.out.println("Cart contents: ");
         activeShoppingCart.showCart();
     }
+
+    private void addItemToCart(Scanner scanner) {
+        Map<String, Callable<Product>> menu = new HashMap<>();
+        for (Product p : Inventory.getInstance().getProductsInInventory().values()) {
+            menu.put(p.compactString(), () -> p);
+        }
+        System.out.println("Select a product");
+        Product p = MenuRunner.runMenuType(scanner, menu);
+        activeShoppingCart.addToCart(p.getProductName(), 1);
+    }
+
     private void checkoutCart(Scanner scanner) {
         Customer customer = null;
         if (CustomerManager.getInstance().getActiveCustomer() != null) {
@@ -43,6 +55,8 @@ public class Store {
         menu.put("Standard Delivery", () -> { return new Shipping(Shipping.DeliveryOptions.StandardDelivery); });
         Shipping shipping = MenuRunner.runMenuType(scanner, menu);
 
+        System.out.println("Choose a payment method:");
+
         Map<String, Callable<Payment>> paymentMenu = new HashMap<>();
         paymentMenu.put("Cash", () -> new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()));
         paymentMenu.put("Credit Card", () -> { return new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()); });
@@ -52,17 +66,21 @@ public class Store {
 
         this.activeShoppingCart = new ShoppingCart();
         this.activeOrders.add(order);
+
+        System.out.println("Order created!");
     }
 
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
-        Map<String, Runnable> menu = new HashMap<>();
+        Map<String, Runnable> menu = new LinkedHashMap<>();
         menu.put("List products", () -> Inventory.getInstance().printProductList());
         menu.put("Show cart", () -> printCart());
+        menu.put("Add item to cart", () -> addItemToCart(scanner));
         menu.put("Checkout cart", () -> checkoutCart(scanner));
         menu.put("Manage customers", () -> {
             Map<String, Runnable> submenu = new HashMap<>();
             submenu.put("Add customer", () -> CustomerManager.getInstance().readInputAndAddCustomer(scanner));
+            submenu.put("Remove customer", () -> CustomerManager.getInstance().readInputAndRemoveCustomer(scanner));
             submenu.put("List customers", () -> CustomerManager.getInstance().printCustomers());
             MenuRunner.runMenuUntilQuit(scanner, submenu);
         });

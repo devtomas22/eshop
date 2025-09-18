@@ -14,6 +14,13 @@ public class Product {
         this.numberOfItemsInStock = numberOfItemsInStock;
     }
 
+    public String compactString() {
+        return "Product{" +
+                "productName='" + productName + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

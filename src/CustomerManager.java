@@ -1,7 +1,8 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
+import java.util.concurrent.Callable;
+import java.util.*;
 public class CustomerManager {
     static CustomerManager singleObject;
     private CustomerManager customerManager;
@@ -50,6 +51,16 @@ public class CustomerManager {
             email = scanner.nextLine();
         }
         return this.registerCustomer(new Customer(firstName, lastName, address, phoneNumber, email));
+    }
+
+    public void readInputAndRemoveCustomer(Scanner scanner) {
+        Map<String, Callable<Customer>> menu = new LinkedHashMap<>();
+        for (Customer customer : this.customers.values()) {
+            menu.put(customer.compactString(), () -> customer);
+        }
+        System.out.println("Select customer to remove");
+        Customer customerToRemove = MenuRunner.runMenuType(scanner, menu);
+        this.customers.remove(customerToRemove.getCustomerID());
     }
 
     public void printCustomers() {

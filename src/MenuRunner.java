@@ -13,6 +13,9 @@ public class MenuRunner {
         }
         return chosen;
     }
+    public static String runMenu(Map<String, Runnable> optionMap) {
+        return runMenu(new  Scanner(System.in), optionMap);
+    }
     public static String runMenu(Scanner scanner, Map<String, Runnable> optionMap) {
         List<String> keys = new ArrayList<>(optionMap.keySet());
         String chosenMenuItem = null;
@@ -39,6 +42,9 @@ public class MenuRunner {
             }
         }
         return chosenMenuItem;
+    }
+    public static <T> T runMenuType(Map<String, Callable<T>> optionMap) {
+        return runMenuType(new Scanner(System.in), optionMap);
     }
     public static <T> T runMenuType(Scanner scanner, Map<String, Callable<T>> optionMap) {
         List<String> keys = new ArrayList<>(optionMap.keySet());
