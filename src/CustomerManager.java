@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
-
+import java.util.*;
 public class CustomerManager {
     static CustomerManager singleObject;
     private CustomerManager customerManager;
@@ -54,7 +54,7 @@ public class CustomerManager {
     }
 
     public void readInputAndRemoveCustomer(Scanner scanner) {
-        Map<String, Callable<Customer>> menu = new HashMap<>();
+        Map<String, Callable<Customer>> menu = new LinkedHashMap<>();
         for (Customer customer : this.customers.values()) {
             menu.put(customer.compactString(), () -> customer);
         }

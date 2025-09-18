@@ -22,6 +22,17 @@ public class Store {
         System.out.println("Cart contents: ");
         activeShoppingCart.showCart();
     }
+
+    private void addItemToCart(Scanner scanner) {
+        Map<String, Callable<Product>> menu = new HashMap<>();
+        for (Product p : Inventory.getInstance().getProductsInInventory().values()) {
+            menu.put(p.compactString(), () -> p);
+        }
+        System.out.println("Select a product");
+        Product p = MenuRunner.runMenuType(scanner, menu);
+        activeShoppingCart.addToCart(p.getProductName(), 1);
+    }
+
     private void checkoutCart(Scanner scanner) {
         Customer customer = null;
         if (CustomerManager.getInstance().getActiveCustomer() != null) {
@@ -61,9 +72,10 @@ public class Store {
 
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
-        Map<String, Runnable> menu = new HashMap<>();
+        Map<String, Runnable> menu = new LinkedHashMap<>();
         menu.put("List products", () -> Inventory.getInstance().printProductList());
         menu.put("Show cart", () -> printCart());
+        menu.put("Add item to cart", () -> addItemToCart(scanner));
         menu.put("Checkout cart", () -> checkoutCart(scanner));
         menu.put("Manage customers", () -> {
             Map<String, Runnable> submenu = new HashMap<>();
