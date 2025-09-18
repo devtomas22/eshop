@@ -50,14 +50,14 @@ public class Store {
 
         System.out.println("Choose a delivery method:");
 
-        Map<String, Callable<Shipping>> menu = new HashMap<>();
+        Map<String, Callable<Shipping>> menu = new LinkedHashMap<>();
         menu.put("Home Delivery", () -> { return new Shipping(Shipping.DeliveryOptions.HomeDelivery); });
         menu.put("Standard Delivery", () -> { return new Shipping(Shipping.DeliveryOptions.StandardDelivery); });
         Shipping shipping = MenuRunner.runMenuType(scanner, menu);
 
         System.out.println("Choose a payment method:");
 
-        Map<String, Callable<Payment>> paymentMenu = new HashMap<>();
+        Map<String, Callable<Payment>> paymentMenu = new LinkedHashMap<>();
         paymentMenu.put("Cash", () -> new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()));
         paymentMenu.put("Credit Card", () -> { return new Payment(Payment.PaymentMethod.CreditCard, activeShoppingCart.getTotalCost()); });
         Payment payment = MenuRunner.runMenuType(scanner, paymentMenu);
@@ -78,7 +78,7 @@ public class Store {
         menu.put("Add item to cart", () -> addItemToCart(scanner));
         menu.put("Checkout cart", () -> checkoutCart(scanner));
         menu.put("Manage customers", () -> {
-            Map<String, Runnable> submenu = new HashMap<>();
+            Map<String, Runnable> submenu = new LinkedHashMap<>();
             submenu.put("Add customer", () -> CustomerManager.getInstance().readInputAndAddCustomer(scanner));
             submenu.put("Remove customer", () -> CustomerManager.getInstance().readInputAndRemoveCustomer(scanner));
             submenu.put("List customers", () -> CustomerManager.getInstance().printCustomers());
