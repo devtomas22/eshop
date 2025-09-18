@@ -41,6 +41,14 @@ public class Customer {
         return customerID;
     }
 
+    public String compactString() {
+        return "Customer{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
