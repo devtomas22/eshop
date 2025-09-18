@@ -29,4 +29,9 @@ public final class StringHelpers {
         }
         return true;
     }
+
+    public static boolean partialMatch(String part, String complete){
+        String substring = complete.substring(0, Math.min(part.length(), complete.length()));
+        return (part.equalsIgnoreCase(substring));
+    }
 }
